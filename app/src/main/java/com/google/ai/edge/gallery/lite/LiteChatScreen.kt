@@ -49,6 +49,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -153,7 +154,7 @@ fun LiteChatScreen(
   // Auto-select the model chosen on the settings page (persisted) once the allowlist is ready.
   // Runs exactly once: the initial selectedModel is EMPTY_MODEL whose name is "empty" (not ""), so
   // checking isEmpty() never fired and the saved model was never restored on restart.
-  var didAutoSelectSavedModel by remember { mutableStateOf(false) }
+  var didAutoSelectSavedModel by rememberSaveable { mutableStateOf(false) }
   LaunchedEffect(modelManagerUiState.tasks) {
     if (!didAutoSelectSavedModel && modelManagerUiState.tasks.isNotEmpty()) {
       didAutoSelectSavedModel = true
@@ -183,7 +184,7 @@ fun LiteChatScreen(
   // Reset the executor session with the effective (answer-language) system prompt once per
   // (model, language) pair. Changing the answer language in settings therefore restarts the
   // conversation with the new language directive.
-  var lastResetKey by remember { mutableStateOf("") }
+  var lastResetKey by rememberSaveable { mutableStateOf("") }
   val resetKey = "${selectedModel.name}|$answerLanguage"
   LaunchedEffect(isModelInitialized, resetKey) {
     if (isModelInitialized && lastResetKey != resetKey) {
