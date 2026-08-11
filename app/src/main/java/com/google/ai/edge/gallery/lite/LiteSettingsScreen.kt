@@ -210,7 +210,7 @@ fun LiteSettingsScreen(
               liteTtsManager.setRate(it)
               liteSettingsRepository.saveTtsRate(it)
             },
-            valueRange = 0.5f..2f,
+            valueRange = 0.5f..8f,
           )
           var ttsPitch by remember { mutableFloatStateOf(liteSettingsRepository.readTtsPitch()) }
           Text(

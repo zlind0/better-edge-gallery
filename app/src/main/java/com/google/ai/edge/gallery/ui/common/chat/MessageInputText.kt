@@ -45,6 +45,11 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.lifecycle.awaitInstance
 import androidx.camera.view.PreviewView
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -493,6 +498,12 @@ fun MessageInputText(
 
         Spacer(modifier = Modifier.width(16.dp))
       }
+    }
+
+    // A prominent hint shown while the hold-to-record voice input is active, so the user knows the
+    // mic is live. Rendered directly above the input row, i.e. in the lower part of the screen.
+    if (isHoldRecording) {
+      HoldRecordingIndicator(elapsedMs = holdElapsedMs.longValue)
     }
 
     Box(contentAlignment = Alignment.Center, modifier = Modifier.heightIn(min = 76.dp)) {
@@ -1478,4 +1489,53 @@ private class SensorObserver(context: Context) : DefaultLifecycleObserver, Senso
   }
 
   override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+}
+
+/**
+ * A prominent full-width bar shown while the user is recording voice: a pulsing red dot, a label,
+ * and the elapsed recording time. Lets the user know the microphone is live without looking at the
+ * input row.
+ */
+@Composable
+private fun HoldRecordingIndicator(elapsedMs: Long) {
+  val transition = rememberInfiniteTransition(label = "recordingPulse")
+  val dotAlpha by
+    transition.animateFloat(
+      initialValue = 0.4f,
+      targetValue = 1f,
+      animationSpec = infiniteRepeatable(tween(durationMillis = 600), RepeatMode.Reverse),
+      label = "recordingDotAlpha",
+    )
+  Row(
+    modifier =
+      Modifier.fillMaxWidth()
+        .background(MaterialTheme.colorScheme.errorContainer)
+        .padding(horizontal = 16.dp, vertical = 10.dp),
+    verticalAlignment = Alignment.CenterVertically,
+  ) {
+    Box(
+      modifier =
+        Modifier.size(12.dp).clip(CircleShape).background(Color.Red.copy(alpha = dotAlpha))
+    )
+    Spacer(modifier = Modifier.width(8.dp))
+    Text(
+      text = stringResource(R.string.lite_recording_in_progress),
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onErrorContainer,
+    )
+    Spacer(modifier = Modifier.weight(1f))
+    Text(
+      text = formatRecordingTime(elapsedMs),
+      style = MaterialTheme.typography.bodyMedium,
+      color = MaterialTheme.colorScheme.onErrorContainer,
+    )
+  }
+}
+
+/** Formats recording elapsed time as "m:ss" (or "0:ss" under a minute). */
+private fun formatRecordingTime(elapsedMs: Long): String {
+  val totalSeconds = elapsedMs / 1000
+  val minutes = totalSeconds / 60
+  val seconds = totalSeconds % 60
+  return "%d:%02d".format(minutes, seconds)
 }

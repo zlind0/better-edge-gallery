@@ -151,12 +151,16 @@ fun LiteChatScreen(
     modelInitializationStatus?.status == ModelInitializationStatusType.INITIALIZED
 
   // Auto-select the model chosen on the settings page (persisted) once the allowlist is ready.
-  // The persisted value defaults to the app's default model.
+  // Runs exactly once: the initial selectedModel is EMPTY_MODEL whose name is "empty" (not ""), so
+  // checking isEmpty() never fired and the saved model was never restored on restart.
+  var didAutoSelectSavedModel by remember { mutableStateOf(false) }
   LaunchedEffect(modelManagerUiState.tasks) {
-    if (modelManagerUiState.selectedModel.name.isEmpty()) {
-      modelManagerViewModel
-        .getModelByName(liteSettingsRepository.readSelectedModel())
-        ?.let { model -> modelManagerViewModel.selectModel(model) }
+    if (!didAutoSelectSavedModel && modelManagerUiState.tasks.isNotEmpty()) {
+      didAutoSelectSavedModel = true
+      val model =
+        modelManagerViewModel.getModelByName(liteSettingsRepository.readSelectedModel())
+          ?: modelManagerViewModel.getModelByName(LiteSettings.DEFAULT_MODEL_NAME)
+      if (model != null) modelManagerViewModel.selectModel(model)
     }
   }
 

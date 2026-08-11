@@ -155,6 +155,7 @@ constructor(@ApplicationContext private val context: Context) {
               initializing = false
               activeEngineName = engineName
               _engineReady.value = true
+              Log.i(TAG, "TTS engine ready: $engineName (${engine.voices.size} voices)")
               applySettings()
               // Speak anything that streamed in while the engine was still initializing.
               tts?.let { speakCompletedSegments(it) }

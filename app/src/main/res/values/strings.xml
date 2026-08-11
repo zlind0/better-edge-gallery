@@ -430,6 +430,8 @@
   <string name="lite_tts_voice_system_default" translatable="true" description="Option to follow the system default TTS voice. [CHAR_LIMIT=30]">Follow system default</string>
   <!-- Button that speaks a sample sentence with the current read-aloud settings. -->
   <string name="lite_tts_test" translatable="true" description="Button label to test the read-aloud voice. [CHAR_LIMIT=24]">Test read-aloud</string>
+  <!-- Banner shown while the user is holding the voice button to record. -->
+  <string name="lite_recording_in_progress" translatable="true" description="Label shown while recording voice input. [CHAR_LIMIT=24]">Recording…</string>
   <!-- Caption showing which text-to-speech engine is being used. -->
   <string name="lite_tts_engine" translatable="true" description="Caption for the text-to-speech engine currently in use. [CHAR_LIMIT=40]">Engine: %1$s</string>
   <!-- Shown when the text-to-speech engine failed to initialize. -->
