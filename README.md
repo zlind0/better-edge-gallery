@@ -1,6 +1,8 @@
-# Edge Gallery Lite
+# Local Gemma
 
 一个极简的 Android 端到端 LLM 聊天应用，**复用了 Google AI Edge Gallery 的代码**（模型管理、LiteRT-LM 推理、聊天界面、图片/音频输入），包装出一层精简的产品：**打开就是聊天，设置里管理模型和朗读**。
+
+![](doc/adhd.png)
 
 ## 功能
 

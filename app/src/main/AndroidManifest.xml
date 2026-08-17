@@ -69,7 +69,7 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="${appIcon}"
-        android:label="Edge Gallery Lite"
+        android:label="Local Gemma"
         android:roundIcon="${appIcon}"
         android:supportsRtl="true"
         android:theme="@style/Theme.Gallery"
