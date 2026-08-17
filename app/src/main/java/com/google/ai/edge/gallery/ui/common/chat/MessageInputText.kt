@@ -629,22 +629,38 @@ fun MessageInputText(
                         else Color.White,
                     )
                   }
-                  // Send button.
-                  IconButton(
-                    enabled = enableSend,
-                    onClick = { performSend() },
-                    colors =
-                      IconButtonDefaults.iconButtonColors(
-                        containerColor = getTaskIconColor(task = task),
-                        disabledContainerColor = getTaskIconColor(task = task).copy(alpha = 0.3f),
-                      ),
-                  ) {
-                    Icon(
-                      Icons.AutoMirrored.Rounded.Send,
-                      contentDescription = stringResource(R.string.cd_send_prompt_icon),
-                      modifier = Modifier.offset(x = 2.dp),
-                      tint = Color.White,
-                    )
+                  // Send button (transforms into a Stop button while response is being generated).
+                  if (inProgress && showStopButtonWhenInProgress) {
+                    IconButton(
+                      onClick = onStopButtonClicked,
+                      colors =
+                        IconButtonDefaults.iconButtonColors(
+                          containerColor = MaterialTheme.colorScheme.secondaryContainer
+                        ),
+                    ) {
+                      Icon(
+                        Icons.Rounded.Stop,
+                        contentDescription = stringResource(R.string.cd_stop_icon),
+                        tint = MaterialTheme.colorScheme.primary,
+                      )
+                    }
+                  } else {
+                    IconButton(
+                      enabled = enableSend,
+                      onClick = { performSend() },
+                      colors =
+                        IconButtonDefaults.iconButtonColors(
+                          containerColor = getTaskIconColor(task = task),
+                          disabledContainerColor = getTaskIconColor(task = task).copy(alpha = 0.3f),
+                        ),
+                    ) {
+                      Icon(
+                        Icons.AutoMirrored.Rounded.Send,
+                        contentDescription = stringResource(R.string.cd_send_prompt_icon),
+                        modifier = Modifier.offset(x = 2.dp),
+                        tint = Color.White,
+                      )
+                    }
                   }
                 }
               }
@@ -992,26 +1008,22 @@ fun MessageInputText(
                   }
                 }
 
-                // Stop button.
-                if (inProgress && showStopButtonWhenInProgress) {
-                  if (!modelInitializing && !modelPreparing) {
-                    IconButton(
-                      onClick = onStopButtonClicked,
-                      colors =
-                        IconButtonDefaults.iconButtonColors(
-                          containerColor = MaterialTheme.colorScheme.secondaryContainer
-                        ),
-                    ) {
-                      Icon(
-                        Icons.Rounded.Stop,
-                        contentDescription = stringResource(R.string.cd_stop_icon),
-                        tint = MaterialTheme.colorScheme.primary,
-                      )
-                    }
+                // Send button (transforms into a Stop button while response is being generated).
+                if (inProgress && showStopButtonWhenInProgress && !modelInitializing && !modelPreparing) {
+                  IconButton(
+                    onClick = onStopButtonClicked,
+                    colors =
+                      IconButtonDefaults.iconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                      ),
+                  ) {
+                    Icon(
+                      Icons.Rounded.Stop,
+                      contentDescription = stringResource(R.string.cd_stop_icon),
+                      tint = MaterialTheme.colorScheme.primary,
+                    )
                   }
-                }
-                // Send button.
-                else {
+                } else {
                   IconButton(
                     enabled =
                       !inProgress &&
